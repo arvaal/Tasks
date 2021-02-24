@@ -19,8 +19,8 @@ class TasksController extends Controller {
         ];
 
         $links = [
-            'action' => DIR . 'save',
-            'cancel_link' => DIR
+            'action' => DIR . '/save',
+            'cancel_link' => DIR . '/'
         ];
 
         $vars = [
@@ -37,7 +37,7 @@ class TasksController extends Controller {
         $this->view->path = 'tasks/success';
 
         $links = [
-            'home_link' => DIR
+            'home_link' => DIR . '/'
         ];
 
         $texts = [
@@ -60,7 +60,7 @@ class TasksController extends Controller {
         if ($this->clean->server['REQUEST_METHOD'] == 'POST') {
             if ($this->clean->post['name'] && $this->clean->post['email'] && $this->clean->post['text']) {
                 $this->model->addTasks($this->clean->post);
-                $this->view->redirect(DIR . 'save');
+                $this->view->redirect(DIR . '/save');
             }
         }
 

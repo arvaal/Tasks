@@ -8,20 +8,20 @@ class Menu {
         $menu = [
             'logo' => [
                 'text' => 'Tasks',
-                'href' => DIR
+                'href' => DIR . '/'
             ],
             'menu' => [
                 [
                     'text' => 'Список задач',
-                    'href' => DIR,
+                    'href' => DIR . '/',
                 ],
                 [
                     'text' => 'Создать задачу',
-                    'href' => DIR . 'create',
+                    'href' => DIR . '/create',
                 ],
                 [
                     'text' => 'Администратор',
-                    'href' => DIR . 'admin/tasks',
+                    'href' => DIR . '/admin/tasks',
                 ]
             ]
         ];

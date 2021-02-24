@@ -12,10 +12,10 @@ class HomeController extends Controller {
         $sort_url = DIR;
         if (isset($this->route['page'])) {
             $page = $this->route['page'];
-            $sort_url .= 'page/' . $page;
+            $sort_url .= '/page/' . $page;
         } else {
             $page = 1;
-            $sort_url .= 'page/1';
+            $sort_url .= '/page/1';
         }
 
         if (isset($this->route['sort'])) {
@@ -47,7 +47,7 @@ class HomeController extends Controller {
         $pagination->page = $page;
         $pagination->limit = $limit;
         $pagination->text = '';
-        $pagination->url = DIR . 'page/{page}' . $url;
+        $pagination->url = DIR . '/page/{page}' . $url;
 
         if ($order == 'asc') {
             $sort_order = 'desc';
@@ -75,8 +75,8 @@ class HomeController extends Controller {
         ];
 
         $links = [
-            'edit_link' => DIR . 'admin/tasks/edit/',
-            'create_link' => DIR . 'create/',
+            'edit_link' => DIR . '/admin/tasks/edit/',
+            'create_link' => DIR . '/create/',
         ];
 
         $vars = [

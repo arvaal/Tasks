@@ -10,9 +10,9 @@ class AdminController extends Controller {
 
     public function loginAction() {
 
-        if (!empty($_POST)) {
-            if (!$this->model->loginValidate($_POST)) {
-                $this->view->message('error', $this->model->error);
+        if (!empty($this->clean->post)) {
+            if (!$this->model->loginValidate($this->clean->post)) {
+                $this->view->redirect(DIR . '/admin/login');
             }
             $_SESSION['admin'] = true;
         }
@@ -24,7 +24,7 @@ class AdminController extends Controller {
         ];
 
         $links = [
-            'action' => DIR . 'admin/login'
+            'action' => DIR . '/admin/login'
         ];
 
         $vars = [
@@ -34,7 +34,7 @@ class AdminController extends Controller {
         ];
 
         if (isset($_SESSION['admin']) && $_SESSION['admin']) {
-            $this->view->redirect('tasks');
+            $this->view->redirect(DIR . '/admin/tasks');
         }
 
         $this->view->render($vars['h1'], $vars);
@@ -48,10 +48,10 @@ class AdminController extends Controller {
             $sort_url = DIR;
             if (isset($this->route['page'])) {
                 $page = $this->route['page'];
-                $sort_url .= 'admin/tasks/page/' . $page;
+                $sort_url .= '/admin/tasks/page/' . $page;
             } else {
                 $page = 1;
-                $sort_url .= 'admin/tasks/page/1';
+                $sort_url .= '/admin/tasks/page/1';
             }
 
             if (isset($this->route['sort'])) {
@@ -83,7 +83,7 @@ class AdminController extends Controller {
             $pagination->page = $page;
             $pagination->limit = $limit;
             $pagination->text = '';
-            $pagination->url = DIR . 'admin/tasks/page/{page}' . $url;
+            $pagination->url = DIR . '/admin/tasks/page/{page}' . $url;
 
             if ($order == 'asc') {
                 $sort_order = 'desc';
@@ -111,8 +111,8 @@ class AdminController extends Controller {
             ];
 
             $links = [
-                'edit_link' => DIR . 'admin/tasks/edit/',
-                'create_link' => DIR . 'create/',
+                'edit_link' => DIR . '/admin/tasks/edit/',
+                'create_link' => DIR . '/create/',
             ];
 
             $vars = [
@@ -126,7 +126,7 @@ class AdminController extends Controller {
 
             $this->view->render($vars['h1'], $vars);
         } else {
-            $this->view->redirect('admin/login');
+            $this->view->redirect(DIR . '/admin/login');
         }
     }
 
@@ -151,9 +151,9 @@ class AdminController extends Controller {
         ];
 
         $links = [
-            'action' => DIR . 'admin/tasks/save',
-            'home_link' => DIR . 'admin/tasks',
-            'cancel_link' => DIR . 'admin/tasks'
+            'action' => DIR . '/admin/tasks/save',
+            'home_link' => DIR . '/admin/tasks',
+            'cancel_link' => DIR . '/admin/tasks'
         ];
 
         $vars = [
@@ -175,7 +175,7 @@ class AdminController extends Controller {
         ];
 
         $links = [
-            'home_link' => DIR . 'admin/tasks'
+            'home_link' => DIR . '/admin/tasks'
         ];
 
         $vars = [
@@ -187,7 +187,7 @@ class AdminController extends Controller {
         if ($this->clean->server['REQUEST_METHOD'] == 'POST') {
             if ($this->clean->post['name'] && $this->clean->post['email'] && $this->clean->post['text'] && $this->clean->post['status'] >= 0) {
                 $this->model->updateTasks($this->clean->post);
-                $this->view->redirect(DIR . 'admin/tasks/save');
+                $this->view->redirect(DIR . '/admin/tasks/save');
             }
         }
 
