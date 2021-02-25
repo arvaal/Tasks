@@ -29,9 +29,11 @@
                 </svg>
             </span>
         </div>
+        <input type="hidden" name="do_chang_text" value="<?php echo $task['text']; ?>">
+            <input type="hidden" name="changed_text" value="<?php echo $task['changed_text']; ?>">
         <textarea name="text" id="text" class="form-control" placeholder="<?php echo $texts['text_text']; ?>" required=""><?php echo $task['text']; ?></textarea>
     </div>
-
+    <br>
     <div class="checkbox mb-3">
         <div class="form-check">
             <input name="status" type="radio" class="form-check-input" value="1" <?php echo $task['status'] == 1 ? 'checked=""' : ''; ?> />

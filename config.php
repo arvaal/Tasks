@@ -11,16 +11,20 @@ define("ROUTES", [
         'action' => 'index'
     ],
     'create' => [
-        'controller' => 'tasks',
+        'controller' => 'home',
         'action' => 'create'
     ],
     'save' => [
-        'controller' => 'tasks',
+        'controller' => 'home',
         'action' => 'save'
     ],
     'admin/login' => [
         'controller' => 'admin',
         'action' => 'login'
+    ],
+    'admin/logout' => [
+        'controller' => 'admin',
+        'action' => 'logout'
     ],
     'admin/tasks' => [
         'controller' => 'admin',
@@ -60,7 +64,7 @@ define("ROUTES", [
     ]
 ]);
 
-define('DIR', '/Tasks/');
+define('DIR', '/Tasks');
 
 define("DB", [
     'host' => 'localhost',

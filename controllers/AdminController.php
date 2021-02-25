@@ -10,13 +10,6 @@ class AdminController extends Controller {
 
     public function loginAction() {
 
-        if (!empty($this->clean->post)) {
-            if (!$this->model->loginValidate($this->clean->post)) {
-                $this->view->redirect(DIR . '/admin/login');
-            }
-            $_SESSION['admin'] = true;
-        }
-
         $texts = [
             'text_login' => 'Логин',
             'text_password' => 'Пароль',
@@ -33,11 +26,45 @@ class AdminController extends Controller {
             'links' => $links
         ];
 
+        $vars['success'] = [];
+
+        if (isset($_SESSION['success'])) {
+            $vars['success'] = $_SESSION['success'];
+
+            unset($_SESSION['success']);
+        } else {
+            $vars['success'] = '';
+        }
+
+        $vars['errors'] = [];
+
+        if (isset($_SESSION['admin'])) {
+            $this->view->redirect(DIR . '/admin/tasks');
+        }
+
+        if (!empty($this->clean->post)) {
+
+            if (!$this->model->loginValidate($this->clean->post)) {
+                $vars['errors'][] = 'Логин или пароль указан неверно';
+                $this->view->render($vars['h1'], $vars);
+                exit();
+            }
+
+            $_SESSION['admin'] = true;
+            $_SESSION['success'] = 'Вы вошли как адмнистратор';
+            $this->view->redirect(DIR . '/admin/tasks');
+        }
+
         if (isset($_SESSION['admin']) && $_SESSION['admin']) {
             $this->view->redirect(DIR . '/admin/tasks');
         }
 
         $this->view->render($vars['h1'], $vars);
+    }
+
+    public function logoutAction() {
+        unset($_SESSION['admin']);
+        $this->view->redirect(DIR . '/admin/tasks');
     }
 
     public function tasksAction() {
@@ -107,12 +134,17 @@ class AdminController extends Controller {
                 'btn_action' => 'Изменить',
                 'btn_create' => 'Создать задачу',
                 'text_yes' => 'В работе',
-                'text_no' => 'Завершен',
+                'text_no' => 'Выполнено',
+                'text_changed' => 'Отредактировано администратором',
+                'text_login' => 'Войти как администратор',
+                'text_logout' => 'Выход'
             ];
 
             $links = [
                 'edit_link' => DIR . '/admin/tasks/edit/',
                 'create_link' => DIR . '/create/',
+                'login_link' => DIR . '/admin/login',
+                'logout_link' => DIR . '/admin/logout'
             ];
 
             $vars = [
@@ -121,8 +153,17 @@ class AdminController extends Controller {
                 'tasks' => $result,
                 'texts' => $texts,
                 'links' => $links,
-                'pagination' => $pagination->render()
+                'pagination' => $pagination->render(),
+                'is_admin' => isset($_SESSION['admin']) ? $_SESSION['admin'] : false
             ];
+
+            if (isset($_SESSION['success'])) {
+                $vars['success'] = $_SESSION['success'];
+
+                unset($_SESSION['success']);
+            } else {
+                $vars['success'] = '';
+            }
 
             $this->view->render($vars['h1'], $vars);
         } else {
@@ -131,67 +172,86 @@ class AdminController extends Controller {
     }
 
     public function editAction() {
+        if (isset($_SESSION['admin']) && $_SESSION['admin']) {
 
-        $model = new Home();
+            $model = new Home();
 
-        $data = [
-            'id' => $this->route['id']
-        ];
+            $data = [
+                'id' => $this->route['id']
+            ];
 
-        $result = $model->getTask($data);
+            $result = $model->getTask($data);
 
-        $texts = [
-            'text_name' => 'Название задачи',
-            'text_email' => 'Эл-почта',
-            'text_text' => 'Текст',
-            'text_yes' => 'В работу',
-            'text_no' => 'Завершить',
-            'text_save' => 'Сохранить',
-            'text_cancel' => 'Отменить',
-        ];
+            $texts = [
+                'text_name' => 'Название задачи',
+                'text_email' => 'Эл-почта',
+                'text_text' => 'Текст',
+                'text_yes' => 'В работу',
+                'text_no' => 'Завершить',
+                'text_save' => 'Сохранить',
+                'text_cancel' => 'Отменить',
+            ];
 
-        $links = [
-            'action' => DIR . '/admin/tasks/save',
-            'home_link' => DIR . '/admin/tasks',
-            'cancel_link' => DIR . '/admin/tasks'
-        ];
+            $links = [
+                'action' => DIR . '/admin/tasks/save',
+                'home_link' => DIR . '/admin/tasks',
+                'cancel_link' => DIR . '/admin/tasks'
+            ];
 
-        $vars = [
-            'h1' => 'Редактирование задачи',
-            'task' => $result,
-            'texts' => $texts,
-            'links' => $links
-        ];
+            $vars = [
+                'h1' => 'Редактирование задачи',
+                'task' => $result,
+                'texts' => $texts,
+                'links' => $links
+            ];
 
-        $this->view->render($vars['h1'], $vars);
+            $this->view->render($vars['h1'], $vars);
+        } else {
+            $this->view->redirect(DIR . '/admin/login');
+        }
     }
 
     public function saveAction() {
+        
+        if (isset($_SESSION['admin']) && $_SESSION['admin']) {
+            
+            $texts = [
+                'text_home' => 'На главную'
+            ];
 
-        $this->view->path = 'tasks/success';
+            $links = [
+                'home_link' => DIR . '/admin/tasks'
+            ];
 
-        $texts = [
-            'text_home' => 'На главную'
-        ];
+            $vars = [
+                'h1' => 'Задача сохранена',
+                'links' => $links,
+                'texts' => $texts
+            ];
 
-        $links = [
-            'home_link' => DIR . '/admin/tasks'
-        ];
+            $vars['errors'] = [];
 
-        $vars = [
-            'h1' => 'Задача сохранена',
-            'links' => $links,
-            'texts' => $texts
-        ];
+            if ($this->clean->server['REQUEST_METHOD'] == 'POST') {
 
-        if ($this->clean->server['REQUEST_METHOD'] == 'POST') {
-            if ($this->clean->post['name'] && $this->clean->post['email'] && $this->clean->post['text'] && $this->clean->post['status'] >= 0) {
-                $this->model->updateTasks($this->clean->post);
-                $this->view->redirect(DIR . '/admin/tasks/save');
+                $post = $this->clean->post;
+
+                if ($post['text'] !== $post['do_chang_text']) {
+                    $post['changed_text'] = 1;
+                }
+
+                unset($post['do_chang_text']);
+
+                if ($post['name'] && $post['email'] && $post['text'] && $post['status'] >= 0) {
+                    $this->model->updateTasks($post);
+                    $_SESSION['success'] = 'Задача успешно изменина';
+                    $this->view->redirect(DIR . '/admin/tasks');
+                }
             }
-        }
 
-        $this->view->render($vars['h1'], $vars);
+            $this->view->render($vars['h1'], $vars);
+        } else {
+            $this->view->redirect(DIR . '/admin/login');
+        }
     }
 
 }

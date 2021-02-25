@@ -17,7 +17,7 @@
         <div class="input-group-prepend">
             <span class="input-group-text">@</span>
         </div>
-        <input type="text" name="email" class="form-control" id="email" placeholder="<?php echo $texts['text_email']; ?>" required="" autocomplete="off">
+        <input type="email" name="email" class="form-control" id="email" placeholder="<?php echo $texts['text_email']; ?>" required="" autocomplete="off">
     </div>
 
     <label for="email"><?php echo $texts['text_text']; ?></label>

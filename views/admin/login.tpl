@@ -1,3 +1,9 @@
+<?php foreach ($errors as $error) { ?>
+    <div class="alert alert-danger"><?php echo $error; ?></div>
+<?php } ?>
+<?php foreach ($errors as $error) { ?>
+    <div class="alert alert-danger"><?php echo $error; ?></div>
+<?php } ?>
 <form action="<?php echo $links['action']; ?>" class="form-signin" method="post">
     <h1 class="h3 mb-3 font-weight-normal"><?php echo $h1; ?></h1>
     <label for="inputLogin"><?php echo $texts['text_login']; ?></label>
@@ -9,7 +15,7 @@
                 </svg>
             </span>
         </div>
-        <input type="text" name="login" id="inputLogin" class="form-control" placeholder="<?php echo $texts['text_login']; ?>" required="" autofocus="" autocomplete="off">
+        <input type="text" name="login" id="inputLogin" class="form-control" placeholder="<?php echo $texts['text_login']; ?>" required="" autofocus="" autocomplete="off" value="admin">
     </div>
     <label for="inputPassword"><?php echo $texts['text_password']; ?></label>
     <div class="input-group">
@@ -20,7 +26,7 @@
                 </svg>
             </span>
         </div>
-        <input type="password" name="password" id="inputPassword" class="form-control" placeholder="<?php echo $texts['text_password']; ?>" required="" autocomplete="off">
+        <input type="password" name="password" id="inputPassword" class="form-control" placeholder="<?php echo $texts['text_password']; ?>" required="" autocomplete="off" value="123">
     </div>
     <div class="checkbox mb-3"></div>
     <button class="btn btn-lg btn-primary btn-block" type="submit"><?php echo $texts['text_send']; ?></button>

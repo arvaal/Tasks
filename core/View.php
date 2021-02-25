@@ -16,12 +16,12 @@ class View {
     }
 
     public function render($title, $vars = []) {
-        
+
         $menu = new Menu();
         $menu = $menu->menu();
-        
+
         extract($vars);
-        
+
         $path = 'views/' . $this->path . '.tpl';
 
         if (file_exists($path)) {
@@ -33,17 +33,26 @@ class View {
             self::errorCode(404);
         }
     }
-    
+
     public static function errorCode($code) {
         http_response_code($code);
-        $path = 'views/errors/' . $code . '.tpl';;
+        $path = 'views/errors/' . $code . '.tpl';
+        ;
         require $path;
         exit;
     }
-    
+
     public function redirect($url) {
         header('location: ' . $url);
         exit;
+    }
+
+    public function message($status, $message) {
+        exit(json_encode(['status' => $status, 'message' => $message]));
+    }
+
+    public function location($url) {
+        exit(json_encode(['url' => $url]));
     }
 
 }

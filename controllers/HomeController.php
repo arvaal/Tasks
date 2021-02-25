@@ -7,8 +7,9 @@ use lib\Pagination;
 
 class HomeController extends Controller {
 
-    public function indexAction() {
+    private $errors = [];
 
+    public function indexAction() {
         $sort_url = DIR;
         if (isset($this->route['page'])) {
             $page = $this->route['page'];
@@ -71,12 +72,17 @@ class HomeController extends Controller {
             'btn_action' => 'Изменить',
             'btn_create' => 'Создать задачу',
             'text_yes' => 'В работе',
-            'text_no' => 'Завершен',
+            'text_no' => 'Выполнено',
+            'text_changed' => 'Отредактировано администратором',
+            'text_login' => 'Войти как администратор',
+            'text_logout' => 'Выход'
         ];
 
         $links = [
             'edit_link' => DIR . '/admin/tasks/edit/',
             'create_link' => DIR . '/create/',
+            'login_link' => DIR . '/admin/login',
+            'logout_link' => DIR . '/admin/logout'
         ];
 
         $vars = [
@@ -85,8 +91,84 @@ class HomeController extends Controller {
             'texts' => $texts,
             'links' => $links,
             'tasks' => $result,
-            'pagination' => $pagination->render()
+            'pagination' => $pagination->render(),
+            'is_admin' => isset($_SESSION['admin']) ? $_SESSION['admin'] : false
         ];
+        
+        $vars['success'] = [];
+
+        if (isset($_SESSION['success'])) {
+            $vars['success'] = $_SESSION['success'];
+
+            unset($_SESSION['success']);
+        } else {
+            $vars['success'] = '';
+        }
+
+        $this->view->render($vars['h1'], $vars);
+    }
+
+    public function createAction() {
+
+        $texts = [
+            'text_name' => 'Название задачи',
+            'text_email' => 'Эл-почта',
+            'text_text' => 'Текст',
+            'text_yes' => 'В работе',
+            'text_save' => 'Сохранить',
+            'text_cancel' => 'Отменить',
+        ];
+
+        $links = [
+            'action' => DIR . '/save',
+            'cancel_link' => DIR . '/'
+        ];
+
+        $vars = [
+            'h1' => 'Создать задачу',
+            'texts' => $texts,
+            'links' => $links
+        ];
+
+        $this->view->render($vars['h1'], $vars);
+    }
+
+    public function saveAction() {
+
+        $this->view->path = 'home/success';
+
+        $links = [
+            'home_link' => DIR . '/'
+        ];
+
+        $texts = [
+            'text_name' => 'Название задачи',
+            'text_email' => 'Эл-почта',
+            'text_text' => 'Текст',
+            'text_yes' => 'В работу',
+            'text_no' => 'Завершить',
+            'text_save' => 'Сохранить',
+            'text_home' => 'На главную',
+        ];
+
+        $vars = [
+            'h1' => 'Задача сохранена',
+            'texts' => $texts,
+            'links' => $links
+        ];
+
+        $vars['errors'] = [];
+
+
+        if ($this->clean->server['REQUEST_METHOD'] == 'POST') {
+            if ($this->clean->post['name'] && $this->clean->post['email'] && $this->clean->post['text']) {
+                $this->model->addTasks($this->clean->post);
+
+                $_SESSION['success'] = 'Задача успешно добавлена';
+
+                $this->view->redirect(DIR . '/');
+            }
+        }
 
         $this->view->render($vars['h1'], $vars);
     }

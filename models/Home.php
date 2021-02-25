@@ -42,5 +42,9 @@ class Home extends Model {
 
         return $result;
     }
+    
+    public function addTasks($data = []): void {
+        $this->db->add("INSERT INTO tasks (name, email, text) VALUES (:name, :email, :text)", $data);
+    }
 
 }
