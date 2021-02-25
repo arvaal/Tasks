@@ -15,7 +15,7 @@
                 </svg>
             </span>
         </div>
-        <input type="text" name="login" id="inputLogin" class="form-control" placeholder="<?php echo $texts['text_login']; ?>" required="" autofocus="" autocomplete="off" value="admin">
+        <input type="text" name="login" id="inputLogin" class="form-control" placeholder="<?php echo $texts['text_login']; ?>" required="" autofocus="" autocomplete="off">
     </div>
     <label for="inputPassword"><?php echo $texts['text_password']; ?></label>
     <div class="input-group">
@@ -26,7 +26,7 @@
                 </svg>
             </span>
         </div>
-        <input type="password" name="password" id="inputPassword" class="form-control" placeholder="<?php echo $texts['text_password']; ?>" required="" autocomplete="off" value="123">
+        <input type="password" name="password" id="inputPassword" class="form-control" placeholder="<?php echo $texts['text_password']; ?>" required="" autocomplete="off">
     </div>
     <div class="checkbox mb-3"></div>
     <button class="btn btn-lg btn-primary btn-block" type="submit"><?php echo $texts['text_send']; ?></button>
