@@ -64,7 +64,7 @@ define("ROUTES", [
     ]
 ]);
 
-define('DIR', '/Tasks');
+define('DIR', '');
 
 define("DB", [
     'host' => 'localhost',
